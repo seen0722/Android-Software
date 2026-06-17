@@ -2,7 +2,7 @@
 name: aosp-root-router
 layer: L1
 path_scope: /  # Root of the AOSP tree — all top-level directories
-version: 1.1.0
+version: 1.2.0
 android_version_tested: Android 16
 parent_skill: null
 ---
@@ -97,6 +97,7 @@ This skill is **always** the first to load. There are no exceptions. Activate on
 ## Routing Algorithm
 
 ```
+0. If a device cue is present (product/SKU/branch/build-option/HW component/customer), invoke L4 device-grounding first (see "Device Context Detection"), then continue.
 1. Extract all AOSP paths or subsystem keywords from the user's task.
 2. Look up each in the Intent-to-Path Mapping Table above.
 3. If ONE L2 skill covers all matched paths → load that skill exclusively.
