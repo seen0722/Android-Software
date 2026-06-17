@@ -1,0 +1,4 @@
+layer: dist/cn
+distribution: cn
+gms: { integrated: false, replacement: vendor-appstore }
+certification: { programs: [cts, vts], status: "n/a" }

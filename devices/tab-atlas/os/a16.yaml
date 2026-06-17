@@ -1,0 +1,4 @@
+layer: os/a16
+android_version: "16"
+kernel: { gki_branch: android14-6.1 }
+source: { manifest_file: "atlas_a16.xml" }

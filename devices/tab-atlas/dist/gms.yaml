@@ -1,0 +1,4 @@
+layer: dist/gms
+distribution: gms
+gms: { integrated: true, level: full, package_config: vendor/partner_gms/products/, preinstall_partition: product }
+certification: { programs: [cts, gts, vts], status: in_progress }

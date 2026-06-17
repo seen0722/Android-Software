@@ -1,0 +1,2 @@
+layer: hw/modem-x75
+components: { modem: snapdragon-x75 }

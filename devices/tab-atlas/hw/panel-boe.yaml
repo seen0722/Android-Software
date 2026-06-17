@@ -1,0 +1,2 @@
+layer: hw/panel-boe
+components: { panel: boe-tv101wum }

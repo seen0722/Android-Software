@@ -1,0 +1,6 @@
+sku: atlas-wifi-boe-gms-tr
+layers: [base, os/a16, hw/panel-boe, dist/gms, customer/trimble]
+resolves_from:
+  branch: "trimble/atlas/rel-a16-wifi-boe"
+  build_option: "TARGET_PRODUCT=atlas_wifi_gms_tr"
+freshness: { last_verified: "2026-06-12", status: fresh }

@@ -1,0 +1,6 @@
+sku: atlas-lte-ofilm-cn-dl
+layers: [base, os/a16, hw/panel-ofilm, hw/modem-x75, dist/cn, customer/datalogic]
+resolves_from:
+  branch: "DL_atlas_A16_lte-ofilm-cn"
+  build_option: "TARGET_PRODUCT=atlas_lte_cn_dl"
+freshness: { last_verified: "2026-06-12", status: fresh }

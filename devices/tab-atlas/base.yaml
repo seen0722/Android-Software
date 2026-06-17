@@ -1,0 +1,12 @@
+product: tab-atlas
+soc: { vendor: qualcomm, codename: kalama, model: SM8650 }
+kernel: { gki_branch: android14-6.1, page_size: 4k }
+android_version: "16"
+board_paths: { device_config: device/qcom/kalama/, vendor_root: vendor/qcom/ }
+partitions: { scheme: ab, layout: gpt }
+components: { wifi: wcn7850, modem: none }
+source:
+  manifest_repo: "git@gitlab.example.com:atlas/manifest.git"
+  manifest_file: "atlas.xml"
+  build_script: "build/atlas.sh"
+freshness: { last_verified: "2026-06-17", status: fresh }

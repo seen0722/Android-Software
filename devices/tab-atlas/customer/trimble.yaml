@@ -1,0 +1,24 @@
+layer: customer/trimble
+customer: trimble
+isolation_group: trimble
+conventions:
+  branch_pattern: "trimble/{product}/rel-{androidver}-{sku}"
+  sku_encoding: "TR-{hw}-{dist}"
+  version_scheme: "{cust_year}.{cust_rev}"
+source:
+  manifest_repo: "git@gitlab.example.com:trimble/atlas-manifest.git"
+  gitlab_location: "gitlab.example.com/trimble/atlas/*"
+  fetch:
+    method: repo
+    init: "repo init -u {manifest_repo} -b {branch} -m {manifest_file}"
+    sync: "repo sync -j8"
+    workspace_hint: "~/work/atlas-tr"
+  build_script: "build/tr/atlas_tr.sh"
+properties:
+  ro.product.manufacturer: Trimble
+  ro.product.model: "{model}"
+  ro.trimble.sku: "{variant_code}"
+governance:
+  delivery_branch: "trimble/atlas/rel-*"
+  cert_owner: customer
+  approval_gate: customer-signoff

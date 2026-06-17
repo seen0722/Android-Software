@@ -1,0 +1,2 @@
+layer: hw/panel-ofilm
+components: { panel: ofilm-tv101wum, touch: goodix-gt9897 }

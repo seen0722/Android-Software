@@ -59,3 +59,5 @@ fake_hardware/
 
 # LLM e2e routing eval — generated run results (keep the runner, ignore output)
 tests/routing_accuracy/results/
+!devices/
+!docs/

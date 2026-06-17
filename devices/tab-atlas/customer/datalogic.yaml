@@ -1,0 +1,24 @@
+layer: customer/datalogic
+customer: datalogic
+isolation_group: datalogic
+conventions:
+  branch_pattern: "DL_{product}_{androidver}_{sku}"
+  sku_encoding: "DL-{hw}-{dist}"
+  version_scheme: "{cust_major}.{cust_minor}.{odm_build}"
+source:
+  manifest_repo: "git@gitlab.example.com:datalogic/atlas-manifest.git"
+  gitlab_location: "gitlab.example.com/datalogic/atlas/*"
+  fetch:
+    method: repo
+    init: "repo init -u {manifest_repo} -b {branch} -m {manifest_file}"
+    sync: "repo sync -j8"
+    workspace_hint: "~/work/atlas-dl"
+  build_script: "build/dl/atlas_dl.sh"
+properties:
+  ro.product.manufacturer: Datalogic
+  ro.product.model: "{model}"
+  ro.datalogic.sku: "{variant_code}"
+governance:
+  delivery_branch: "DL_atlas_A16_*"
+  cert_owner: customer
+  approval_gate: customer-signoff
