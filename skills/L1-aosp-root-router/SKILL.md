@@ -108,6 +108,18 @@ This skill is **always** the first to load. There are no exceptions. Activate on
 
 ---
 
+## Device Context Detection (pre-routing)
+
+Before subsystem routing, detect a device cue: product id, SKU id / `variant_code`,
+a branch name, a build option (`TARGET_PRODUCT=...`), a named HW component, or a brand
+customer (e.g. Datalogic, Trimble). If present, page `L4-device-grounding-expert` first;
+it resolves the effective profile and verifies source state, then hands back for subsystem
+routing. If absent, route directly (`L1 → L2/L3`). Never guess the SKU — if ambiguous, ask.
+
+Execution order is `L1 → L4 → L2 → L3` even though L4 is the most specific (highest) layer.
+
+---
+
 ## Forbidden Actions
 
 The following actions are **absolutely prohibited** by this router. Violating these creates cross-domain hallucinations.
@@ -140,6 +152,10 @@ After routing, emit a handoff block in this exact format:
 
 ```
 [L1 ROUTING DECISION]
+Device:  <product>/<sku>  (resolved via <sku|branch|build_option|default>)   # omit if no device cue
+Profile: SoC=<codename> GKI=<gki_branch> panel=<panel> dist=<dist> customer=<customer>  # if device
+Source:  manifest=<manifest_file>@<branch>  build=<build_script>             # if device
+State:   VERIFIED | UNVERIFIED | MISMATCH   (subsystem expert must refuse unless VERIFIED)
 Intent: <one-line summary of the task>
 Path(s): <matched AOSP path(s)>
 L2 Skill: <skill name>
