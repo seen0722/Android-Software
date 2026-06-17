@@ -37,6 +37,8 @@ def test_resolve_active_by_branch():
 def test_resolve_active_by_explicit_sku():
     p = rd.resolve_active(DEVICES, sku="atlas-wifi-boe-gms-tr")
     assert p["customer"] == "trimble"
+    assert p["_resolution"]["matched_by"] == "sku"
+    assert p["_resolution"]["assumed_default"] is False
 
 def test_resolve_active_product_only_uses_default_and_flags_assumption():
     p = rd.resolve_active(DEVICES, product="tab-atlas")

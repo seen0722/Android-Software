@@ -111,7 +111,7 @@ def _match_recipes(devices_dir: Path, index: dict, field: str, value: str):
 def resolve_active(devices_dir: Path, *, sku=None, branch=None,
                    build_option=None, product=None) -> dict:
     index = load_index(devices_dir)
-    if sku:
+    if sku is not None:
         prof = resolve_sku(devices_dir, _product_of_sku(index, sku), sku)
         prof["_resolution"] = {"matched_by": "sku", "assumed_default": False}
         return prof
@@ -126,7 +126,7 @@ def resolve_active(devices_dir: Path, *, sku=None, branch=None,
         if len(hits) > 1:
             raise AmbiguousDeviceError(f"{field}={value} matches {hits}")
         raise DeviceNotFoundError(f"no SKU for {field}={value}")
-    if product:
+    if product is not None:
         prod = next((p for p in index["products"] if p["id"] == product), None)
         if not prod:
             raise DeviceNotFoundError(f"unknown product: {product}")
