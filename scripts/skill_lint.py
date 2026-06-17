@@ -64,8 +64,9 @@ REQUIRED_SECTIONS_L1 = [
 ]
 
 REQUIRED_SECTIONS_L3 = REQUIRED_SECTIONS_L2  # L3 follows L2 template
+REQUIRED_SECTIONS_L4 = REQUIRED_SECTIONS_L2  # L4 follows L2 template
 
-VALID_LAYERS = {"L1", "L2", "L3"}
+VALID_LAYERS = {"L1", "L2", "L3", "L4"}
 
 MIN_FORBIDDEN_ACTIONS = 5
 
@@ -215,6 +216,8 @@ def lint_skill(skill_dir: str, include_templates: bool = False) -> LintResult | 
         result.warn("L2 skill should reference a parent_skill (typically 'aosp-root-router')")
     if layer == "L3" and (not parent or parent == "null"):
         result.warn("L3 skill should reference a parent L2 skill")
+    if layer == "L4" and (not parent or parent == "null"):
+        result.warn("L4 skill should reference a parent skill")
 
     # ---- Required sections ----
     sections = extract_sections(body)
@@ -223,6 +226,8 @@ def lint_skill(skill_dir: str, include_templates: bool = False) -> LintResult | 
         required = REQUIRED_SECTIONS_L1
     elif layer == "L3":
         required = REQUIRED_SECTIONS_L3
+    elif layer == "L4":
+        required = REQUIRED_SECTIONS_L4
     else:
         required = REQUIRED_SECTIONS_L2
 

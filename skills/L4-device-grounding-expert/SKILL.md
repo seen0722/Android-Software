@@ -1,6 +1,6 @@
 ---
 name: device-grounding-expert
-layer: L3
+layer: L4
 path_scope: devices/
 version: 1.0.0
 android_version_tested: Android 16
