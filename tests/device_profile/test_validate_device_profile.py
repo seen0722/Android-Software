@@ -15,3 +15,5 @@ def test_pattern_literals_present():
 def test_find_secrets_flags_token_like_values():
     assert v.find_secrets({"source": {"token": "ghp_abcdef0123456789abcdef0123456789abcd"}})
     assert v.find_secrets({"source": {"fetch": {"init": "repo init -u {manifest_repo}"}}}) == []
+    assert v.find_secrets({"certification": {"programs": ["cts", "ghp_abcdef0123456789abcdef0123456789abcd"]}})
+    assert v.find_secrets({"token": {"nested": "x"}})

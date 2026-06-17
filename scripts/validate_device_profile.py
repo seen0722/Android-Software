@@ -35,9 +35,12 @@ def find_secrets(node, path="") -> list[str]:
     hits = []
     if isinstance(node, dict):
         for k, val in node.items():
-            if isinstance(val, str) and _SECRET_KEYS.search(str(k)):
+            if _SECRET_KEYS.search(str(k)):
                 hits.append(f"{path}.{k}: secret-like key")
             hits += find_secrets(val, f"{path}.{k}")
+    elif isinstance(node, list):
+        for i, item in enumerate(node):
+            hits += find_secrets(item, f"{path}[{i}]")
     elif isinstance(node, str) and _SECRET_VAL.search(node):
         hits.append(f"{path}: secret-like value")
     return hits
