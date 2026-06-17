@@ -2,6 +2,7 @@
 """resolve_device.py — compose layered device profiles + resolve the active SKU."""
 from __future__ import annotations
 
+import fnmatch
 import json
 from pathlib import Path
 import yaml
@@ -74,3 +75,80 @@ def resolve_sku(devices_dir: Path, product: str, sku_id: str) -> dict:
     profile["resolves_from"] = sku.get("resolves_from", {})
 
     return profile
+
+
+class DeviceNotFoundError(Exception):
+    pass
+
+
+class AmbiguousDeviceError(Exception):
+    pass
+
+
+def _iter_skus(index: dict):
+    for product in index["products"]:
+        for sku_id in product["skus"]:
+            yield product["id"], sku_id
+
+
+def _product_of_sku(index: dict, sku_id: str) -> str:
+    for product in index["products"]:
+        if sku_id in product["skus"]:
+            return product["id"]
+    raise DeviceNotFoundError(f"unknown sku: {sku_id}")
+
+
+def _match_recipes(devices_dir: Path, index: dict, field: str, value: str):
+    hits = []
+    for product, sku_id in _iter_skus(index):
+        recipe = load_yaml(devices_dir / product / "skus" / f"{sku_id}.yaml")
+        declared = recipe.get("resolves_from", {}).get(field, "")
+        if declared and (value == declared or fnmatch.fnmatch(value, declared)):
+            hits.append((product, sku_id))
+    return hits
+
+
+def resolve_active(devices_dir: Path, *, sku=None, branch=None,
+                   build_option=None, product=None) -> dict:
+    index = load_index(devices_dir)
+    if sku:
+        prof = resolve_sku(devices_dir, _product_of_sku(index, sku), sku)
+        prof["_resolution"] = {"matched_by": "sku", "assumed_default": False}
+        return prof
+    for field, value in (("branch", branch), ("build_option", build_option)):
+        if not value:
+            continue
+        hits = _match_recipes(devices_dir, index, field, value)
+        if len(hits) == 1:
+            prof = resolve_sku(devices_dir, hits[0][0], hits[0][1])
+            prof["_resolution"] = {"matched_by": field, "assumed_default": False}
+            return prof
+        if len(hits) > 1:
+            raise AmbiguousDeviceError(f"{field}={value} matches {hits}")
+        raise DeviceNotFoundError(f"no SKU for {field}={value}")
+    if product:
+        prod = next((p for p in index["products"] if p["id"] == product), None)
+        if not prod:
+            raise DeviceNotFoundError(f"unknown product: {product}")
+        prof = resolve_sku(devices_dir, product, prod["default_sku"])
+        prof["_resolution"] = {"matched_by": "default", "assumed_default": True}
+        return prof
+    raise AmbiguousDeviceError("no sku/branch/build_option/product cue given")
+
+
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="Resolve an effective device profile")
+    ap.add_argument("--devices-dir", default="devices")
+    ap.add_argument("--sku")
+    ap.add_argument("--branch")
+    ap.add_argument("--build-option")
+    ap.add_argument("--product")
+    args = ap.parse_args(argv)
+    prof = resolve_active(Path(args.devices_dir), sku=args.sku, branch=args.branch,
+                          build_option=args.build_option, product=args.product)
+    print(json.dumps(prof, indent=2, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()

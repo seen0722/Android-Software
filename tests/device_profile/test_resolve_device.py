@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 import resolve_device as rd
+import pytest
 
 def test_deep_merge_overrides_scalar_and_merges_maps():
     base = {"components": {"modem": "none", "wifi": "wcn7850"}, "k": 1}
@@ -27,3 +28,21 @@ def test_resolve_sku_merges_layers_in_order():
     assert p["source"]["manifest_repo"].endswith("datalogic/atlas-manifest.git")
     assert "layer" not in p                                 # meta stripped
     assert p["resolves_from"]["branch"] == "DL_atlas_A16_lte-ofilm-cn"
+
+def test_resolve_active_by_branch():
+    p = rd.resolve_active(DEVICES, branch="DL_atlas_A16_lte-ofilm-cn")
+    assert p["sku"] == "atlas-lte-ofilm-cn-dl"
+    assert p["_resolution"]["matched_by"] == "branch"
+
+def test_resolve_active_by_explicit_sku():
+    p = rd.resolve_active(DEVICES, sku="atlas-wifi-boe-gms-tr")
+    assert p["customer"] == "trimble"
+
+def test_resolve_active_product_only_uses_default_and_flags_assumption():
+    p = rd.resolve_active(DEVICES, product="tab-atlas")
+    assert p["sku"] == "atlas-lte-ofilm-cn-dl"
+    assert p["_resolution"]["assumed_default"] is True
+
+def test_resolve_active_unknown_branch_raises():
+    with pytest.raises(rd.DeviceNotFoundError):
+        rd.resolve_active(DEVICES, branch="nope/does-not-exist")
