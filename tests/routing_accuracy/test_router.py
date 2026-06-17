@@ -33,6 +33,11 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Tuple
 from pathlib import Path
 
+# Shared grader — single source of truth for PASS/FAIL. Also imported by
+# llm_runner.py so the mock score and the LLM score are judged identically.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from grading import grade  # noqa: E402
+
 # ---------------------------------------------------------------------------
 # Data types
 # ---------------------------------------------------------------------------
@@ -1372,33 +1377,11 @@ def run_tests(mode: str = "live") -> None:
             skipped += 1
         else:
             routing = route_task(tc.description)
-            skill_match = routing["skill"] == tc.expected_skill
-            # For path matching: check if each expected path is covered by
-            # any returned path (prefix match in either direction)
             got_paths = routing.get("paths") or []
-            paths_match = True
-            for ep in tc.expected_paths:
-                found = False
-                for gp in got_paths:
-                    if gp.startswith(ep) or ep.startswith(gp):
-                        found = True
-                        break
-                    # Handle glob patterns in expected_paths (e.g., "*.rc")
-                    if ep.startswith("*"):
-                        if gp.endswith(ep[1:]):
-                            found = True
-                            break
-                    # Handle wildcards in expected paths (e.g., "vendor/*/sepolicy/")
-                    if "*" in ep:
-                        pat = ep.replace("*", "[^/]+")
-                        if re.match(pat, gp):
-                            found = True
-                            break
-                if not found:
-                    paths_match = False
-                    break
-            # Skill match is the primary metric; path match is secondary
-            status = "PASS" if skill_match else "FAIL"
+            # Shared grader: skill match is primary (drives PASS/FAIL),
+            # paths_match is a recorded secondary signal only.
+            g = grade(routing["skill"], got_paths, tc.expected_skill, tc.expected_paths)
+            status = g.status
             if status == "PASS":
                 passed += 1
             else:
@@ -1411,7 +1394,7 @@ def run_tests(mode: str = "live") -> None:
                 "got_skill": routing["skill"],
                 "expected_paths": tc.expected_paths,
                 "got_paths": got_paths,
-                "paths_matched": paths_match,
+                "paths_matched": g.paths_match,
             }
         results.append(result)
 

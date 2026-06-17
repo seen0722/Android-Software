@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "purpose": "Clue-stripped variants of 40 routing cases. Measures whether the LLM routes by semantic understanding rather than keyword matching. The mock router's KEYWORD_RULES collapse on these; an LLM that stays accurate proves real routing.",
+    "rules": "Removed from each description: explicit AOSP paths/filenames (frameworks/base, *.rc, Android.bp), owner-naming tool/component proper nouns (audit2allow, AudioFlinger, netd, GKI, Microdroid, LK), and any skill-name hints. Kept: symptoms, user goals, observed behavior.",
+    "ground_truth": "expected_skill / expected_paths are NOT stored here — they come from TEST_CASES (test_router.py) keyed by id. This file only overrides the description.",
+    "undecidable_when_stripped": "If true, the case is informationally undecidable once stripped and is EXCLUDED from main accuracy (so we judge the agent, not a broken case). All false in v1; flip to true during verification if measured consistency shows a case lost its unique answer.",
+    "subset": "40 cases — 12 L2 skills each covered >=3 times (pkvm topped up via multi-skill primaries).",
+    "primary_skill_note": "primary_skill below is a human-readable reminder only; it is informational and not used for grading."
+  },
+  "cases": [
+    {"id": "TC-001", "primary_skill": "L2-build-system-expert", "undecidable_when_stripped": false, "description_stripped": "我的建置失敗，錯誤訊息說某個模組依賴了一個被停用的模組。我要怎麼修正模組設定，讓它能編過？"},
+    {"id": "TC-028", "primary_skill": "L2-build-system-expert", "undecidable_when_stripped": false, "description_stripped": "我下了建置指令後，建置系統在最早的自我啟動（bootstrap）階段就失敗，說有個未知的目標。要怎麼診斷與修復？"},
+    {"id": "TC-030", "primary_skill": "L2-build-system-expert", "undecidable_when_stripped": false, "description_stripped": "我們的舊式 makefile 用了一個編譯旗標變數，但新的藍圖式模組建置格式不認得它。要怎麼把這個編譯旗標搬到新的模組建置設定？"},
+
+    {"id": "TC-003", "primary_skill": "L2-security-selinux-expert", "undecidable_when_stripped": false, "description_stripped": "log 出現權限被拒的訊息：一個 daemon 想讀某個設定卻被系統的強制存取控制擋下來，但檔案本身的權限看起來是正常的。怎麼處理？"},
+    {"id": "TC-031", "primary_skill": "L2-security-selinux-expert", "undecidable_when_stripped": false, "description_stripped": "我新增了一個 daemon，需要讓它能寫入一個 vendor 的資料目錄，但目前被系統的強制存取控制政策擋住。我要加哪些政策規則與標籤？"},
+    {"id": "TC-033", "primary_skill": "L2-security-selinux-expert", "undecidable_when_stripped": false, "description_stripped": "我新增了一個系統屬性，但行程在讀取它時拿到權限拒絕。要怎麼讓這個新屬性能被正常讀取？"},
+
+    {"id": "TC-005", "primary_skill": "L2-hal-vendor-interface-expert", "undecidable_when_stripped": false, "description_stripped": "我們要把 sensor 的硬體抽象介面從第 2 版升級到第 3 版。正確的介面版本升級流程是什麼？"},
+    {"id": "TC-006", "primary_skill": "L2-hal-vendor-interface-expert", "undecidable_when_stripped": false, "description_stripped": "我要確認我們的 vendor 函式庫有沒有在允許給 vendor 使用的介面清單上，並符合 system 與 vendor 分割之間的相容性規範。怎麼查？"},
+    {"id": "TC-037", "primary_skill": "L2-hal-vendor-interface-expert", "undecidable_when_stripped": false, "description_stripped": "我要實作電池健康狀態的硬體抽象介面。哪裡有介面定義？哪些方法是必填、哪些是選填？"},
+
+    {"id": "TC-007", "primary_skill": "L2-framework-services-expert", "undecidable_when_stripped": false, "description_stripped": "我新增的系統服務觸發了系統的看門狗逾時（ANR）。我該在哪裡加上看門狗的處理常式？"},
+    {"id": "TC-039", "primary_skill": "L2-framework-services-expert", "undecidable_when_stripped": false, "description_stripped": "系統把我的背景服務殺得太積極。我想了解行程重要性的評分機制與 adj 等級是怎麼運作的。"},
+    {"id": "TC-041", "primary_skill": "L2-framework-services-expert", "undecidable_when_stripped": false, "description_stripped": "套件管理服務在回傳一大串套件清單時丟出『交易資料過大』的例外。要怎麼修？"},
+
+    {"id": "TC-009", "primary_skill": "L2-init-boot-sequence-expert", "undecidable_when_stripped": false, "description_stripped": "我的 vendor daemon 在開機時啟動失敗，因為找不到它的 socket。這個 daemon 是用開機啟動腳本定義的。我要怎麼除錯它的 socket 定義？"},
+    {"id": "TC-043", "primary_skill": "L2-init-boot-sequence-expert", "undecidable_when_stripped": false, "description_stripped": "我用開機啟動腳本在某個系統屬性變成 1 時觸發服務，但服務有時會在屬性設定之前就啟動。正確的觸發條件該怎麼寫？"},
+    {"id": "TC-046", "primary_skill": "L2-init-boot-sequence-expert", "undecidable_when_stripped": false, "description_stripped": "開機時是誰負責建立裝置節點？我要設定一個新裝置節點的權限，該在哪裡設定？"},
+
+    {"id": "TC-011", "primary_skill": "L2-version-migration-expert", "undecidable_when_stripped": false, "description_stripped": "我們要從一個 Android 大版本升級到下一個版本，我想先掌握開機映像格式有哪些破壞性變更需要注意。"},
+    {"id": "TC-049", "primary_skill": "L2-version-migration-expert", "undecidable_when_stripped": false, "description_stripped": "我要產生兩個 Android 版本之間公開 API 介面的差異，用來評估對我們 OEM app 的衝擊。怎麼做？"},
+    {"id": "TC-050", "primary_skill": "L2-version-migration-expert", "undecidable_when_stripped": false, "description_stripped": "升級到新版 Android 後，我們無法重新編譯的預編譯 vendor 函式庫，在新的記憶體分頁大小要求下會遇到什麼問題？"},
+
+    {"id": "TC-013", "primary_skill": "L2-multimedia-audio-expert", "undecidable_when_stripped": false, "description_stripped": "音訊系統一直回報緩衝逾時，問題出在我們的 DSP 音訊硬體層。我要追蹤從音訊框架一路到硬體層的緩衝路徑。"},
+    {"id": "TC-053", "primary_skill": "L2-multimedia-audio-expert", "undecidable_when_stripped": false, "description_stripped": "相機服務一直回報『相機使用中』，但其實沒有其他 app 開著相機。我要除錯相機工作階段的狀態。"},
+    {"id": "TC-054", "primary_skill": "L2-multimedia-audio-expert", "undecidable_when_stripped": false, "description_stripped": "我要實作一個自訂的多媒體編解碼器外掛。編解碼器是在哪裡註冊的？它又怎麼跟多媒體管線互動？"},
+
+    {"id": "TC-015", "primary_skill": "L2-connectivity-network-expert", "undecidable_when_stripped": false, "description_stripped": "負責網路的守護程式拒絕了我自訂 VPN 介面的路由。管理路由表的程式碼在哪裡？"},
+    {"id": "TC-056", "primary_skill": "L2-connectivity-network-expert", "undecidable_when_stripped": false, "description_stripped": "螢幕關閉後我的 app 就失去 Wi-Fi 連線。Wi-Fi 的省電模式狀態機是怎麼處理這情況的？要怎麼避免斷線？"},
+    {"id": "TC-058", "primary_skill": "L2-connectivity-network-expert", "undecidable_when_stripped": false, "description_stripped": "藍牙 GATT 伺服器在連線建立後回呼都不觸發。我要除錯藍牙協定堆疊裡的 GATT 伺服器狀態。"},
+
+    {"id": "TC-017", "primary_skill": "L2-kernel-gki-expert", "undecidable_when_stripped": false, "description_stripped": "我要為我們的 sensor 驅動新增一個可載入的核心模組。核心設定選項與模組簽章各有哪些要求？"},
+    {"id": "TC-060", "primary_skill": "L2-kernel-gki-expert", "undecidable_when_stripped": false, "description_stripped": "核心在我們的 vendor 模組裡崩潰，訊息是『scheduling while atomic』。要怎麼診斷與修正？"},
+    {"id": "TC-061", "primary_skill": "L2-kernel-gki-expert", "undecidable_when_stripped": false, "description_stripped": "我要在核心設定裡啟用 USB gadget 功能。對一個使用通用核心映像的裝置，要怎麼加核心設定片段？"},
+
+    {"id": "TC-021", "primary_skill": "L2-bootloader-lk-expert", "undecidable_when_stripped": false, "description_stripped": "裝置卡在 fastboot，開機載入程式沒有正確讀取 GPT 分割表。分割表解析的程式碼在開機載入程式的哪個部分？"},
+    {"id": "TC-064", "primary_skill": "L2-bootloader-lk-expert", "undecidable_when_stripped": false, "description_stripped": "OTA 更新後 A/B 槽位切換靜默失敗。開機載入程式是怎麼把新槽位標記成可開機的？這段邏輯在哪？"},
+    {"id": "TC-065", "primary_skill": "L2-bootloader-lk-expert", "undecidable_when_stripped": false, "description_stripped": "驗證開機失敗，錯誤是 rollback index 無效。開機載入程式怎麼檢查 rollback index？它又存在哪裡？"},
+
+    {"id": "TC-023", "primary_skill": "L2-trusted-firmware-atf-expert", "undecidable_when_stripped": false, "description_stripped": "我要新增一個安全監控呼叫（SMC）處理常式，在最高權限的安全監控韌體層，向 Linux 核心提供一個平台電源管理服務。這要改在哪裡？"},
+    {"id": "TC-068", "primary_skill": "L2-trusted-firmware-atf-expert", "undecidable_when_stripped": false, "description_stripped": "在我們的可信執行環境（TEE）裡，一個可信應用程式在初始化時崩潰。我要從 TEE 取得崩潰傾印，它的崩潰處理器在哪裡？"},
+    {"id": "TC-070", "primary_skill": "L2-trusted-firmware-atf-expert", "undecidable_when_stripped": false, "description_stripped": "在安全開機流程中，較早的韌體階段是怎麼量測並驗證下一個安全監控韌體階段的？這條信任鏈是在哪裡實作的？"},
+
+    {"id": "TC-025", "primary_skill": "L2-virtualization-pkvm-expert", "undecidable_when_stripped": false, "description_stripped": "一台理應支援受保護虛擬機的裝置卻回報不支援。我要怎麼啟用受保護虛擬機，並確認虛擬化的第二階段記憶體隔離設定是正確的？"},
+    {"id": "TC-026", "primary_skill": "L2-virtualization-pkvm-expert", "undecidable_when_stripped": false, "description_stripped": "我的輕量虛擬機裡的負載無法透過主機與客體之間的通訊通道連到主機 app。主機端連到某個埠，但客體端從來沒收到連線。我要怎麼除錯主機與客體之間的這條通訊？"},
+    {"id": "TC-079", "primary_skill": "L2-virtualization-pkvm-expert", "undecidable_when_stripped": false, "description_stripped": "我要在 app 裡啟用一個基於輕量虛擬機的隔離運算環境：撰寫虛擬機設定、實作虛擬機內的負載、加上主機與客體之間的通訊，並設定相應的安全政策。"},
+
+    {"id": "TC-071", "primary_skill": "L2-init-boot-sequence-expert", "undecidable_when_stripped": false, "description_stripped": "我要新增一個原生系統 daemon：它要在開機時啟動、跑在自己專屬的安全網域、開一個 Unix socket 對外，程式用 C++ 寫，放在 vendor 區。"},
+    {"id": "TC-072", "primary_skill": "L2-hal-vendor-interface-expert", "undecidable_when_stripped": false, "description_stripped": "我要從頭打造一個虹膜辨識的硬體抽象介面，整條都要：介面定義、HAL 伺服器 daemon、開機啟動腳本、安全政策，以及服務註冊用的標籤。"},
+    {"id": "TC-074", "primary_skill": "L2-kernel-gki-expert", "undecidable_when_stripped": false, "description_stripped": "我要為一顆自訂 sensor 晶片新增核心驅動、把它打包成可載入的核心模組、建立對應的裝置節點，並透過 sensor 的硬體抽象介面對外提供。"},
+    {"id": "TC-075", "primary_skill": "L2-init-boot-sequence-expert", "undecidable_when_stripped": false, "description_stripped": "裝置一直開機循環。log 顯示開機程序把某個 vendor 服務重啟了 4 次，接著出現一次權限拒絕，然後核心就崩潰了。"}
+  ]
+}
