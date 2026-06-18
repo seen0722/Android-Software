@@ -1,0 +1,4 @@
+layer: os/a15
+android_version: "15"
+kernel: { gki_branch: msm-5.4 }
+source: { manifest_file: "default.xml" }   # dev default; pinned manifest selected per dist (GMS/CN)

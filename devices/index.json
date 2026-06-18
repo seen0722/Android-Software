@@ -5,6 +5,12 @@
       "name": "Atlas 11-inch Tablet",
       "default_sku": "atlas-lte-ofilm-cn-dl",
       "skus": ["atlas-lte-ofilm-cn-dl", "atlas-wifi-boe-gms-tr"]
+    },
+    {
+      "id": "thorpe-t70",
+      "name": "Trimble T70 (Thorpe, QCS6490)",
+      "default_sku": "t70-gms-a15",
+      "skus": ["t70-gms-a15", "t70-cn-a15"]
     }
   ]
 }

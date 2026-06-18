@@ -1,0 +1,5 @@
+sku: t70-gms-a15
+layers: [base, os/a15, dist/gms, customer/trimble]
+resolves_from:
+  branch: "release/T70-A15-*-GMS"      # GMS MR release branch (90-day cycle), forked from thorpe_dev
+freshness: { last_verified: "2026-06-05", status: fresh }

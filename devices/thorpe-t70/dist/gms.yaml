@@ -1,0 +1,12 @@
+layer: dist/gms
+distribution: gms
+sku_code: GMS                      # manifest SKU token, e.g. T70-GMS-A15
+gms:
+  integrated: true
+  overlay: vendor/partner_gms      # GMS overlay (GitLab id 29239)
+  modules: vendor/partner_modules  # GMS modules (GitLab id 29240)
+certification:
+  programs: [cts, gts, vts]
+  status: in_progress              # FILL: confirm current GMS cert status (tracked in Redmine project 'thorpe')
+source:
+  release_manifest: "T70-GMS-A15-{mr}.{yymmdd}.xml"   # pinned RELEASE manifest. Daily dev uses default.xml (see base.yaml).

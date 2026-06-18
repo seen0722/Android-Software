@@ -1,0 +1,5 @@
+sku: t70-cn-a15
+layers: [base, os/a15, dist/cn, customer/trimble]
+resolves_from:
+  branch: "release/T70-A15-*-CN"       # CN release branch, inherits GMS MR GA tag
+freshness: { last_verified: "2026-06-05", status: fresh }

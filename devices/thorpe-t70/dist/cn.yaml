@@ -1,0 +1,10 @@
+layer: dist/cn
+distribution: cn
+sku_code: CN                       # manifest SKU token, e.g. T70-CN-A15
+gms:
+  integrated: false                # China build, non-GMS
+certification:
+  programs: [cts, vts]             # CN: no GTS
+  status: "n/a"
+source:
+  release_manifest: "T70-CN-A15-{mr}.{yymmdd}.xml"   # pinned RELEASE manifest (CN inherits GMS MR GA tag). Daily dev uses default.xml.
