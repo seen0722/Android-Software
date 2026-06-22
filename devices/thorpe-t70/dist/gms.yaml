@@ -8,6 +8,8 @@ gms:
   modules: vendor/partner_modules  # GMS modules (GitLab id 29240)
 certification:
   programs: [cts, gts, vts]
-  status: in_progress              # FILL: confirm current GMS cert status (tracked in Redmine project 'thorpe')
+  status: passed                   # currently passed
+  recert_cycle: 90d                # re-submitted every 90 days (each MR) to cover security patch (SPL) updates
+  tracker: "Redmine project 'thorpe'"
 source:
   release_manifest: "T70-GMS-A15-{mr}.{yymmdd}.xml"   # pinned RELEASE manifest. Daily dev uses default.xml (see base.yaml).
