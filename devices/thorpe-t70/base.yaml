@@ -7,7 +7,7 @@ soc:
   model: QCS6490
 kernel:
   gki_branch: msm-5.4      # QCS6490 ships the MSM 5.4 vendor kernel (kernel/msm-5.4), not a GKI android-* branch.
-  page_size: 4k            # FILL: confirm page size for the QCS6490 target.
+  page_size: 4k            # confirmed
 android_version: "15"      # QSSI 15 system image.
 android_base_detail: "Android 15 (QSSI 15) + Android 14 vendor BSP"
 board_paths:
