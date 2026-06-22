@@ -9,7 +9,7 @@ kernel:
   gki_branch: msm-5.4      # QCS6490 ships the MSM 5.4 vendor kernel (kernel/msm-5.4), not a GKI android-* branch.
   page_size: 4k            # confirmed
 android_version: "15"      # QSSI 15 system image.
-android_base_detail: "Android 15 (QSSI 15) + Android 14 vendor BSP"
+android_base_detail: "Android 15 (QSSI 15) + Android 11 vendor BSP"   # vendor BSP is A11 (T70-A11-VENDOR.xml / LA.QSSI.11.0.R1)
 board_paths:
   device_config: device/trimble/thorpe/      # device tree (GitLab id 25911)
   common_config: device/trimble/common/      # common device tree (GitLab id 25912)
