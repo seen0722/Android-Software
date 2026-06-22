@@ -1,6 +1,7 @@
 layer: dist/cn
 distribution: cn
 sku_code: CN                       # manifest SKU token, e.g. T70-CN-A15
+build_option: ""                   # CN = non-GMS: omit -g (use -s alone if a secure-signed build is needed)
 gms:
   integrated: false                # China build, non-GMS
 certification:

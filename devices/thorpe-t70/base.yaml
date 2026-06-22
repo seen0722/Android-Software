@@ -3,7 +3,7 @@ product: thorpe-t70
 # Derived from the prior android-t70-bsp SKILL.md (code-management guide).
 soc:
   vendor: qualcomm
-  codename: qcs6490        # QCS6490 platform; NOT a GKI codename (uses MSM kernel). Confirm if a different SoC codename is preferred.
+  codename: kodiak         # QCS6490/QCM6490 SoC codename = Kodiak (confirmed via boot_images SocPkg/Kodiak/). NOT a GKI codename (MSM kernel).
   model: QCS6490
 kernel:
   gki_branch: msm-5.4      # QCS6490 ships the MSM 5.4 vendor kernel (kernel/msm-5.4), not a GKI android-* branch.
@@ -14,13 +14,24 @@ board_paths:
   device_config: device/trimble/thorpe/      # device tree (GitLab id 25911)
   common_config: device/trimble/common/      # common device tree (GitLab id 25912)
   vendor_root: vendor/
-partitions: {}             # FILL: confirm A/B vs virtual A/B, layout.
+partitions:
+  dynamic: true            # uses super.img (dynamic partitions). Flash set: boot, vendor_boot, super, vbmeta, vbmeta_system, dtbo, recovery
+  # FILL: confirm A/B vs virtual A/B vs A-only (recovery.img is present in the flash set)
 source:
   manifest_repo: "ssh://git@10.192.188.16/qcs6490/manifest.git"   # qcs6490/manifest (project id 31556), single unified manifest
   manifest_file: "default.xml"                                    # DAILY DEV sync (the common case)
   dev_revision: "thorpe_dev"                                      # default.xml <default revision>; main dev line. (per-dist release_manifest is the pinned alternative)
   gitlab_location: "http://10.192.188.16/qcs6490"                 # GitLab group id 3075
-  build_script: "<FILL: build entry — repo sync + lunch; no single build script named in the source SKILL>"
+  build_script: "shell-script/build_all.bash"   # A14 full build; A15 = build_all_A15.bash. See `build:` block.
+build:                     # how to build — Thorpe (QCS6490) repository download guide v5, point 4
+  scripts: { a14: "shell-script/build_all.bash", a15: "shell-script/build_all_A15.bash", per_subsystem: "shell-script/build.bash" }
+  targets: [thorpe, lahaina]   # thorpe = Thorpe board; lahaina = QCS6490 IDP
+  variants: [user, userdebug]
+  options: { "-g": "GMS in QSSI part", "-s": "secure signed image", "-gs": "both" }
+  example: "bash build_all.bash thorpe userdebug -gs"
+  clean: "bash build_all.bash clean_all"
+  subsystems: [qssi_only, target_only, merge_only, boot, aop, adsp, cdsp, tz, packing_nonhlos, pack_image]
+  artifact_dir: "shell-script/artifact/"   # qfil + fastboot packages land here
 gitlab_projects:           # informational reference (project IDs from prior SKILL.md)
   manifest: 31556
   device_trimble_thorpe: 25911

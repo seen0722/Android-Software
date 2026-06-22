@@ -18,7 +18,7 @@ source:
     init: "repo init -u {manifest_repo} -b default -m {manifest_file} --repo-url=ssh://git@10.192.188.16/qcs6490/android14/repo"
     sync: "repo sync"
     workspace_hint: "/mnt/data_1/<user>/thorpe_dev_A15"   # internal build server source path (user/host/creds NOT stored here)
-  build_script: "<FILL: build entry>"
+  # build_script inherited from base.yaml (shell-script/build_all.bash)
 properties:
   ro.product.manufacturer: Trimble
   ro.product.model: T70

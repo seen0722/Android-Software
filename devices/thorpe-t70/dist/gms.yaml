@@ -1,6 +1,7 @@
 layer: dist/gms
 distribution: gms
 sku_code: GMS                      # manifest SKU token, e.g. T70-GMS-A15
+build_option: "-g"                 # build_all.bash GMS option (GMS in QSSI part); use -gs to also secure-sign
 gms:
   integrated: true
   overlay: vendor/partner_gms      # GMS overlay (GitLab id 29239)
