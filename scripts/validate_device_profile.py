@@ -69,7 +69,11 @@ def validate(devices_dir: Path) -> list[str]:
             errors.append(f"{sku_id}: branch '{branch}' does not match pattern '{pattern}'")
         codename = prof.get("soc", {}).get("codename")
         gki = prof.get("kernel", {}).get("gki_branch")
-        if codename in SOC_GKI_TABLE and gki != SOC_GKI_TABLE[codename]:
+        # Only meaningful for GKI kernels: SOC_GKI_TABLE maps GKI codenames -> GKI branch.
+        # A legacy MSM kernel (e.g. msm-5.4) is not GKI, and some platform names (e.g. lahaina)
+        # are reused across SoCs/kernels, so skip unless the kernel is a GKI (android-*) branch.
+        if codename in SOC_GKI_TABLE and isinstance(gki, str) and gki.startswith("android") \
+                and gki != SOC_GKI_TABLE[codename]:
             errors.append(f"{sku_id}: codename {codename} expects {SOC_GKI_TABLE[codename]}, got {gki}")
         errors += [f"{sku_id}: {h}" for h in find_secrets(prof)]
     return errors

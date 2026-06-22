@@ -19,10 +19,15 @@ source:
     sync: "repo sync"
     workspace_hint: "/mnt/data_1/<user>/thorpe_dev_A15"   # internal build server source path (user/host/creds NOT stored here)
   # build_script inherited from base.yaml (shell-script/build_all.bash)
-properties:
-  ro.product.manufacturer: Trimble
+properties:                          # device-confirmed via adb getprop
+  ro.product.manufacturer: "Trimble Inc"
   ro.product.model: T70
-  # FILL: add ro.product.name, build fingerprint, and other customer ro.* properties
+  ro.product.name: T70
+  ro.product.device: thorpe
+  ro.board.platform: lahaina
+  ro.product.board: lahaina
+  ro.hardware: qcom
+  # build fingerprint/SPL are per-build, e.g. Trimble/T70/thorpe:15/AQ3A.250924.001/<ver>:userdebug/release-keys
 governance:
   delivery_branch: "release/T70-A15-*"   # RED LINE — GMS & CN release branches (90-day MR cycle)
   cert_owner: customer                   # GMS cert account owned by the customer (Trimble). RED LINE: treat CTS/GTS/GMS settings as read-only; confirm before any change.

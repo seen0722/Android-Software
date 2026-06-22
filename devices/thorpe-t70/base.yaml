@@ -3,7 +3,9 @@ product: thorpe-t70
 # Derived from the prior android-t70-bsp SKILL.md (code-management guide).
 soc:
   vendor: qualcomm
-  codename: kodiak         # QCS6490/QCM6490 SoC codename = Kodiak (confirmed via boot_images SocPkg/Kodiak/). NOT a GKI codename (MSM kernel).
+  codename: lahaina        # ro.board.platform / ro.product.board (device-confirmed via adb). TARGET_BOARD_PLATFORM. NOT a GKI codename here (MSM kernel).
+  silicon: kodiak          # silicon codename (boot_images SocPkg/Kodiak); QCS6490 reuses the 'lahaina' platform name
+  device: thorpe           # ro.product.device
   model: QCS6490
 kernel:
   gki_branch: msm-5.4      # QCS6490 ships the MSM 5.4 vendor kernel (kernel/msm-5.4), not a GKI android-* branch.
