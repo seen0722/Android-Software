@@ -56,6 +56,20 @@ Your task
 
 ---
 
+## Device Profiles (L4 — grounding to a real board)
+
+Beyond routing, the skill set can ground answers in **a specific product/SKU's real facts**, so the agent stops assuming generic AOSP. Facts live as layered data under `devices/`; a single generic `L4-device-grounding-expert` skill resolves and applies them.
+
+- **Layered data** — `devices/<product>/` composes a profile from `base + os + hw + dist + customer` fragments via thin SKU recipes (no per-SKU duplication).
+- **Source State as Truth** — before analyzing, `verify_source_state.py` confirms the synced tree matches the SKU. For `repo`-managed trees it compares the **manifest** (`default.xml` dev / pinned release); for plain git repos it compares the branch. Uncertainty → `UNVERIFIED`, never a wrong assumption.
+- **Governance & isolation** — per-customer delivery branches, certification ownership, and cross-customer NDA isolation are enforced as forbidden actions.
+
+Execution order is `L1 → L4 → L2/L3` — L4 is paged only when the task names a product / SKU / branch / customer.
+
+First real product line: **`devices/thorpe-t70/`** (Trimble T70, QCS6490 / Kodiak, A/B, single unified manifest). See `devices/ONBOARDING.md` to add your own.
+
+---
+
 ## Quickstart (5 minutes)
 
 ### Prerequisites
@@ -166,8 +180,18 @@ The `detect_dirty_pages.py` script reads changed file paths, matches them agains
 ## Useful Commands
 
 ```bash
-# Run the 100-case routing accuracy test suite
+# Run the routing accuracy test suite
 python3 tests/routing_accuracy/test_router.py
+
+# Resolve a device profile (by SKU / branch / build option / product)
+python3 scripts/resolve_device.py --sku <sku-id>
+python3 scripts/resolve_device.py --branch <branch>
+
+# Validate all device profiles (schema, conventions, no committed secrets)
+python3 scripts/validate_device_profile.py
+
+# Verify a synced tree matches the resolved SKU (manifest-aware for repo trees, branch otherwise)
+python3 scripts/verify_source_state.py <tree_path> --profile <resolved_profile.json>
 
 # Detect dirty skills from a git diff
 git diff --name-only A14..A15 | python3 scripts/detect_dirty_pages.py --apply
@@ -210,6 +234,7 @@ This is **Beta v0.5** — Phase 4 is complete. All automation scripts are delive
 | Android 15 validation pass (all skills updated, delta summary) | ✅ Complete |
 | 36 hindsight notes (HS-001–HS-036) including A16 forward intelligence | ✅ Complete |
 | 100-case routing test suite (30 multi-skill scenarios) | ✅ Complete |
+| Device profiles (L4) + source-state verification + first real product (thorpe-t70) | ✅ Complete |
 
 ### Active Work (Phase 5)
 
@@ -252,7 +277,12 @@ Android-Software/
 │   │   ├── SKILL.md                   # Knowledge, triggers, forbidden actions
 │   │   ├── scripts/                   # Automation tools (Bash/Python)
 │   │   └── references/                # Deep-dive architecture docs
-│   └── L3-TEMPLATE/                   # OEM/SoC extension template
+│   ├── L3-*/                          # OEM/SoC vendor extensions (qualcomm, mediatek) + L3-TEMPLATE
+│   └── L4-device-grounding-expert/    # Device/SKU grounding — reads devices/, verifies source state
+├── devices/                          # Per-product device profiles (layered facts; data, not skills)
+│   ├── index.json                     # Product/SKU registry
+│   ├── schema.md, ONBOARDING.md       # Field schema + how to add a real product
+│   └── <product>/                     # base/ os/ hw/ dist/ customer/ skus/  (e.g. thorpe-t70)
 ├── memory/
 │   ├── hindsight_notes/               # 36 persistent insights (HS-001–HS-036)
 │   ├── cross_skill_triggers.md        # 12 multi-skill task patterns
@@ -261,7 +291,10 @@ Android-Software/
 │   ├── validate_dirty_pages.py        # dirty_pages.json schema validator
 │   ├── detect_dirty_pages.py          # Git-diff dirty page detection
 │   ├── migration_impact.py            # Per-skill migration impact report
-│   └── skill_lint.py                  # SKILL.md schema linter
+│   ├── skill_lint.py                  # SKILL.md schema linter (accepts L1–L4)
+│   ├── resolve_device.py              # Compose effective device profile + resolve active SKU
+│   ├── validate_device_profile.py     # devices/ schema + convention + no-secret validation
+│   └── verify_source_state.py         # Source State as Truth (manifest/branch verification)
 ├── tests/
 │   └── routing_accuracy/
 │       └── test_router.py             # 100-case ground-truth routing spec
