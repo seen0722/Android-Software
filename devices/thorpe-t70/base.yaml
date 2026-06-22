@@ -15,8 +15,8 @@ board_paths:
   common_config: device/trimble/common/      # common device tree (GitLab id 25912)
   vendor_root: vendor/
 partitions:
+  scheme: ab               # A/B slot (confirmed)
   dynamic: true            # uses super.img (dynamic partitions). Flash set: boot, vendor_boot, super, vbmeta, vbmeta_system, dtbo, recovery
-  # FILL: confirm A/B vs virtual A/B vs A-only (recovery.img is present in the flash set)
 source:
   # CURRENT model = single repo since MR3 (manifest.git / default.xml). The v5 download
   # guide's 3-manifest multi-repo fetch (manifest_vendor.git + manifest_qssi.git QSSI14/15,
